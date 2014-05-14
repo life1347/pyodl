@@ -81,7 +81,18 @@ class API(object):
     def retrieve_userLinks(self, container=None):
         return self.__request_top(request_data_func=self.topology.retrieve_userLinks, container=container)
 
+    
     def add_userLink(self, topologyUserLinkConfig, container=None):
+        """
+        Message body : (id of NodeConnector can be found at web troubleshoot->ports)
+
+        link = {
+            'status': 'Success',
+            'name': 'link1',
+            'srcNodeConnector': 'OF|2@OF|00:00:00:00:00:00:00:01',
+            'dstNodeConnector': 'OF|2@OF|00:00:00:00:00:00:00:03'
+        }
+        """
         return self.__request_top(request_data_func=self.topology.add_userLink, container=container, topologyUserLinkConfig=topologyUserLinkConfig)
 
     def del_userLink(self, linkName, container=None):

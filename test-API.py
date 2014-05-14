@@ -15,7 +15,7 @@ Globals
 """
 user = 'admin'
 password = 'admin'
-domain = 'localhost'
+domain = '140.113.207.146'
 port = '8080'
 sport = '8443'
 headers = ["Test Name", "Output", "Comment"]
@@ -92,15 +92,23 @@ def test_Topology_all(api, reportList):
     individualTest = []
     individualTest.append("Add User Link")
     print('adding link named link1')
-    link1 = {
+    """link1 = {
         'status': 'Success',
         'name': 'link1',
         'srcNodeConnector': 'OF|2@OF|00:00:00:00:00:00:00:01',
         'dstNodeConnector': 'OF|2@OF|00:00:00:00:00:00:00:03'
+    }"""
+    link1 = {
+        'status': 'Success',
+        'name': 'link1',
+        'srcNodeConnector': 'OF|1@00:00:b8:ca:3a:65:c6:55',
+        'dstNodeConnector': 'OF|2@00:00:b8:ca:3a:65:c6:49'
     }
+    
     response = api.add_userLink(topologyUserLinkConfig=link1)
     prepareReport(response.status_code, reportList, individualTest)
     time.sleep(1)
+
 #     response = api.retrieve_userLinks()
 #     time.sleep(1)
 
@@ -403,7 +411,7 @@ def main(argv):
     api = API(odl=myodl, format='json')
     reportList = []
     test_Topology_all(api, reportList)
-    test_FlowProgrammer_all(api, reportList)
+    """test_FlowProgrammer_all(api, reportList)
     test_HostTracker_all(api, reportList)
     test_StaticRoute_all(api, reportList)
     test_Statistics_all(api, reportList)
@@ -411,7 +419,7 @@ def main(argv):
     test_ContainerManager_all(api, reportList)
     test_SwitchManager_all(api, reportList)
     test_Subnets_all(api, reportList)
-    test_UserManager_all(api, reportList)
+    test_UserManager_all(api, reportList)"""
     print tabulate(reportList, headers, tablefmt="grid")
     print 'Completed Testing'
 
