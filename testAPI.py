@@ -9,6 +9,7 @@ from API import *
 import time
 from unittest.test import test_break
 from tabulate import tabulate
+from ODL import ODL
 
 """
 Globals
@@ -305,12 +306,12 @@ def test_SwitchManager_all(api, reportList):
     individualTest = []
     individualTest.append("Retrieve Node Connectors by NodeID")
     response = api.retrieve_node_connectors_by_node(nodeId=
-                                                    '00:00:00:00:00:00:00:01')
+                                                    '00:00:b8:ca:3a:65:c6:55')
     prepareReport(response.status_code, reportList, individualTest)
 
     individualTest = []
     individualTest.append("Add Node Property")
-    response = api.add_node_property(nodeId='00:00:00:00:00:00:00:01',
+    response = api.add_node_property(nodeId='00:00:b8:ca:3a:65:c6:55',
                                      propertyName='description',
                                      propertyValue='switch1')
     prepareReport(response.status_code, reportList, individualTest)
@@ -318,7 +319,7 @@ def test_SwitchManager_all(api, reportList):
 
     individualTest = []
     individualTest.append("Delete Node Property")
-    response = api.del_node_property(nodeId='00:00:00:00:00:00:00:01',
+    response = api.del_node_property(nodeId='00:00:b8:ca:3a:65:c6:55',
                                      propertyName='description')
     prepareReport(response.status_code, reportList, individualTest)
 
@@ -410,14 +411,59 @@ def main(argv):
                 domain=domain, port=port, sec_port=sport)
     api = API(odl=myodl, format='json')
     reportList = []
-    test_Topology_all(api, reportList)
+
+    # test for add UserLink and retrieve current network topology 
+    #test_Topology_all(api, reportList)
+
+    #individualTest = []
+    #individualTest.append("Retreive Topology")
+    #response = api.retrieve_the_topology()
+    #response = api.retrieve_node_flows(nodeId='00:00:b8:ca:3a:65:c6:55') #retrieve_all_nodes() #api.retrieve_node_connectors_by_node(nodeId='00:00:b8:ca:3a:65:c6:55')
+    #prepareReport(response.status_code, reportList, individualTest)
+
+    #test_SwitchManager_all(api, reportList)
+    #test_ContainerManager_all(api, reportList)
+    #
+    #test_Statistics_all(api, reportList)
+
+
+    """individualTest = []
+    response = api.retrieve_userLinks()
+    individualTest.append("Retrieve UserLinks")
+    prepareReport(response.status_code, reportList, individualTest)"""
+
+    """individualTest = []
+    individualTest.append("Retrieve node Statistics")
+    response = api.retrieve_node_statistics_flow(nodeId='00:00:b8:ca:3a:65:c6:55')
+    prepareReport(response.status_code, reportList, individualTest)"""
+
+    """individualTest = []
+    individualTest.append("Retrieve node Statisics Ports")
+    response = api.retrieve_node_statistics_port(nodeId='00:00:b8:ca:3a:65:c6:55')
+    prepareReport(response.status_code, reportList, individualTest)"""
+
+    """individualTest = []
+    individualTest.append("Retrieve node Statistics Tables")
+    response = api.retrieve_node_statistics_table(nodeId='00:00:b8:ca:3a:65:c6:55')
+    prepareReport(response.status_code, reportList, individualTest)"""
+
+    individualTest = [] 
+    individualTest.append("Retrieve node Statistics Tables")
+    response = api.retrieve_all_nodes()
+    #response = api.retrieve_node_connectors_by_node(nodeId='00:00:b8:ca:3a:65:c6:55')
+    prepareReport(response.status_code, reportList, individualTest)
+
+
+
+
+
+
     """test_FlowProgrammer_all(api, reportList)
     test_HostTracker_all(api, reportList)
     test_StaticRoute_all(api, reportList)
     test_Statistics_all(api, reportList)
     test_ConnectionManager_all(api, reportList)
     test_ContainerManager_all(api, reportList)
-    test_SwitchManager_all(api, reportList)
     test_Subnets_all(api, reportList)
     test_UserManager_all(api, reportList)"""
     print tabulate(reportList, headers, tablefmt="grid")

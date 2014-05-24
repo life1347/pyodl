@@ -57,8 +57,16 @@ class API(object):
         self.method = self.method_table[request_data.method]
         self.response = self.method(
             self.full_uri, auth=self.odl.auth, data=request_data.data, headers=request_data.headers)
-        print('req uri: {2} \n headers: {3}\n method: {4} \n body: {5}\n{0}\n{1}'.format(
-            self.response.status_code, self.response.text, self.full_uri, request_data.headers,request_data.method,request_data.data))
+        """
+            self.full_uri = http://140.113.207.146:8080/controller/nb/v2/switchmanager/default/nodes
+            request_data.headers = {'Accept': 'application/json'}
+            self.response.status_code = 200, 500, 404 .etc
+            request_data.method = GET, POST, PUT, DELETE
+            request_data.data = ['Retrieve all Nodes', 'Success', 'Got'] only for creating table
+            self.response.text = response json body
+        """
+        #print('req uri: {2} \n headers: {3}\n method: {4} \n body: {5}\n{0}\n{1}'.format(
+        #    self.response.status_code, self.response.text, self.full_uri, request_data.headers,request_data.method,request_data.data))
         return self.response
 
     def __request_top(self, request_data_func, **func_kwargs):
@@ -96,6 +104,16 @@ class API(object):
         return self.__request_top(request_data_func=self.topology.add_userLink, container=container, topologyUserLinkConfig=topologyUserLinkConfig)
 
     def del_userLink(self, linkName, container=None):
+        """
+        Message body : (id of NodeConnector can be found at web troubleshoot->ports)
+
+        link = {
+            'status': 'Success',
+            'name': 'link1',
+            'srcNodeConnector': 'OF|2@OF|00:00:00:00:00:00:00:01',
+            'dstNodeConnector': 'OF|2@OF|00:00:00:00:00:00:00:03'
+        }
+        """
         return self.__request_top(request_data_func=self.topology.del_userLink, container=container, linkName=linkName)
 
     """

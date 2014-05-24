@@ -1,0 +1,81 @@
+#!/usr/bin/python
+'''A sample application for cmd2.'''
+from cmd2 import Cmd, make_option, options
+import unittest, optparse, sys, json, os
+from API import *
+from ODL import ODL
+from tabulate import tabulate
+from testAPI import *
+
+"""
+Globals
+"""
+user = 'admin'
+password = 'admin'
+domain = '140.113.207.146'
+port = '8080'
+sport = '8443'
+headers = ["Test Name", "Output", "Comment"]
+reportList = []
+individualTest = [] 
+
+def pending(strs):
+    string = ''
+    for s in strs:
+        string += s+str(' '*(70-len(s)))
+    return string
+
+def getauth(func): 
+    def auth(*args, **kwargs): 
+        myodl = ODL(auth=HTTPBasicAuth(user, password),
+                domain=domain, port=port, sec_port=sport)
+        reportList = []
+        individualTest = [] 
+        return func(auth=myodl, *args, **kwargs) 
+    return auth
+
+class CmdLineApp(Cmd):
+    prompt = 'ODL >> '
+
+    #node -s
+    node_s_help = pending(['node -s [OPTIONS: node_id]', 'show all nodes if node_id not specified'])
+
+    # action="store_true" is necessary, without it options parsing will go wrong
+    @options([
+                make_option('-s', '--show', action="store_true", help=node_s_help),
+            ])
+    # the ordering of options and getauh is fixed, DO NOT TRY TO CHNAGE THEM
+    @getauth
+    def do_node(self, args, opts=None, auth=None):
+        if opts.show:
+            api = API(odl=auth, format='json')
+
+            if args:
+                if len(args.split(' ')) > 1:
+                    print('too many node id')
+                    return None
+                individualTest.append("Retrieve specified node")
+                response = api.retrieve_node_connectors_by_node(nodeId = args)
+            else:
+                individualTest.append("Retrieve all nodes")
+                response = api.retrieve_all_nodes()
+            
+            prepareReport(response.status_code, reportList, individualTest)
+            print(json.dumps(json.loads(response.text), sort_keys=True, indent=4))
+        elif opts.repeat:
+            print(args.__class__)
+
+    @options([make_option('-r', '--show', action="store_true", help="Show node connector")])
+    @getauth
+    def do_nodes(self, args, opts=None, auth=None):
+        if opts.show:
+            api = API(odl=auth, format='json')
+            individualTest.append("Retrieve all Nodes")
+            response = api.retrieve_all_nodes()
+            prepareReport(response.status_code, reportList, individualTest)
+            print(json.dumps(json.loads(response.text), sort_keys=True, indent=4))
+        elif opts.repeat:
+            print(args.__class__)
+
+app = CmdLineApp()
+app.cmdloop()
