@@ -67,6 +67,8 @@ class API(object):
         """
         #print('req uri: {2} \n headers: {3}\n method: {4} \n body: {5}\n{0}\n{1}'.format(
         #    self.response.status_code, self.response.text, self.full_uri, request_data.headers,request_data.method,request_data.data))
+        print('req uri: {1} \nheaders: {2}\nmethod: {3} \nbody: {4} {0}'.format(
+            self.response.status_code, self.full_uri, request_data.headers,request_data.method,request_data.data))
         return self.response
 
     def __request_top(self, request_data_func, **func_kwargs):

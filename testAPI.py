@@ -466,8 +466,8 @@ def main(argv):
     test_ContainerManager_all(api, reportList)
     test_Subnets_all(api, reportList)
     test_UserManager_all(api, reportList)"""
-    print tabulate(reportList, headers, tablefmt="grid")
-    print 'Completed Testing'
+    #print tabulate(reportList, headers, tablefmt="grid")
+    #print 'Completed Testing'
 
 if __name__ == '__main__':
     main(sys.argv[1:])

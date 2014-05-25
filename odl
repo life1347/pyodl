@@ -4,7 +4,6 @@ from cmd2 import Cmd, make_option, options
 import unittest, optparse, sys, json, os
 from API import *
 from ODL import ODL
-from tabulate import tabulate
 from testAPI import *
 
 """
@@ -38,7 +37,7 @@ class CmdLineApp(Cmd):
     prompt = 'ODL >> '
 
     #node -s
-    node_s_help = pending(['node -s [OPTIONS: node_id]', 'show all nodes if node_id not specified'])
+    node_s_help = pending(['node [-s <OPTIONS: node_id>]', 'show all nodes if node_id not specified'])
 
     # action="store_true" is necessary, without it options parsing will go wrong
     @options([
@@ -52,7 +51,7 @@ class CmdLineApp(Cmd):
 
             if args:
                 if len(args.split(' ')) > 1:
-                    print('too many node id')
+                    print('too many parameters')
                     return None
                 individualTest.append("Retrieve specified node")
                 response = api.retrieve_node_connectors_by_node(nodeId = args)
@@ -60,8 +59,8 @@ class CmdLineApp(Cmd):
                 individualTest.append("Retrieve all nodes")
                 response = api.retrieve_all_nodes()
             
-            prepareReport(response.status_code, reportList, individualTest)
             print(json.dumps(json.loads(response.text), sort_keys=True, indent=4))
+            prepareReport(response.status_code, reportList, individualTest)
         elif opts.repeat:
             print(args.__class__)
 
